@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成分股變化分析 - ETF 持股變化分析器</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/tables.css">
+    <style>
+        .changes-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid;
+        }
+        
+        .new-stocks {
+            background: rgba(76, 175, 80, 0.1);
+            border-left-color: #4CAF50;
+        }
+        
+        .removed-stocks {
+            background: rgba(244, 67, 54, 0.1);
+            border-left-color: #f44336;
+        }
+        
+        .continuing-stocks {
+            background: rgba(33, 150, 243, 0.1);
+            border-left-color: #2196F3;
+        }
+        
+        .month-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .month-card {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .month-card:hover {
+            border-color: #2196F3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .month-card.selected {
+            border-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+        }
+        
+        .stock-list {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .stock-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .stock-code {
+            font-weight: bold;
+            color: #2196F3;
+        }
+        
+        .stock-name {
+            flex-grow: 1;
+            margin-left: 1rem;
+        }
+        
+        .stock-date {
+            font-size: 0.8rem;
+            color: #999;
+            margin-left: 0.5rem;
+        }
+        
+        .stock-weight {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .new-number { color: #4CAF50; }
+        .removed-number { color: #f44336; }
+        .continuing-number { color: #2196F3; }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .month-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📈 成分股變化分析</h1>
+            <p class="subtitle">追蹤 ETF 季度調整的成分股變化</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">📊 總覽</a></li>
+                <li><a href="table_full.html">📋 完整表格</a></li>
+                <li><a href="stock_changes.html" class="active">🔄 成分股變化</a></li>
+                <li><a href="table_dropdown.html">🎯 個股查詢</a></li>
+                <li><a href="charts_separate.html">📈 分開圖表</a></li>
+                <li><a href="charts_dual_axis.html">📊 雙軸圖表</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <!-- 說明區塊 -->
+            <div class="info-box">
+                <h3>🔍 分析說明</h3>
+                <p><strong>00980A 調整機制：</strong>成分股約在每年 1、4、7、10 月進行檢討與調整</p>
+                <ul>
+                    <li><strong>新納入：</strong>該月份新增的成分股</li>
+                    <li><strong>移除：</strong>該月份剔除的成分股</li>
+                    <li><strong>持續持有：</strong>前後月份都存在的成分股</li>
+                </ul>
+            </div>
+
+            <!-- 月份選擇器 -->
+            <h3>📅 選擇分析月份</h3>
+            <div class="month-selector" id="month-selector">
+                <div class="loading">載入月份資料中...</div>
+            </div>
+
+            <!-- 分析結果 -->
+            <div id="analysis-result" style="display: none;">
+                <!-- 統計摘要 -->
+                <div class="summary-stats" id="summary-stats">
+                    <!-- 動態生成 -->
+                </div>
+
+                <!-- 偵錯日誌區域 -->
+                <details style="margin: 1rem 0; border: 1px solid #ddd; border-radius: 8px;">
+                    <summary style="padding: 0.75rem 1rem; font-weight: bold; cursor: pointer; background-color: #f7f7f7;">顯示/隱藏 偵錯日誌</summary>
+                    <pre id="debug-log" style="background-color: #2d2d2d; color: #f1f1f1; padding: 1rem; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; margin: 0;"></pre>
+                </details>
+
+                <!-- 新納入股票 -->
+                <div class="changes-section new-stocks">
+                    <h3>🆕 新納入成分股</h3>
+                    <div id="new-stocks-list">
+                        <!-- 動態生成 -->
+                    </div>
+                </div>
+
+                <!-- 移除股票 -->
+                <div class="changes-section removed-stocks">
+                    <h3>❌ 移除成分股</h3>
+                    <div id="removed-stocks-list">
+                        <!-- 動態生成 -->
+                    </div>
+                </div>
+
+                <!-- 持續持有股票 -->
+                <div class="changes-section continuing-stocks">
+                    <h3>🔄 持續持有成分股</h3>
+                    <div id="continuing-stocks-list">
+                        <!-- 動態生成 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 返回導航 -->
+            <div style="text-align: center; margin: 2rem 0;">
+                <a href="index.html" style="display: inline-block; padding: 12px 24px; background: #2196F3; color: white; text-decoration: none; border-radius: 25px; margin: 0 0.5rem;">🏠 回到首頁</a>
+                <a href="table_full.html" style="display: inline-block; padding: 12px 24px; background: #2196F3; color: white; text-decoration: none; border-radius: 25px; margin: 0 0.5rem;">📊 完整表格</a>
+                <a href="table_dropdown.html" style="display: inline-block; padding: 12px 24px; background: #2196F3; color: white; text-decoration: none; border-radius: 25px; margin: 0 0.5rem;">🔍 個股查詢</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ETF 持股變化分析器 | 成分股變化追蹤</p>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+    <script src="assets/changes-analysis.js"></script>
+</body>
+</html>

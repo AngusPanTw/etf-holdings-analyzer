@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個股查詢 - ETF 持股變化分析器</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/tables.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎯 個股查詢</h1>
+            <p class="subtitle">查詢特定股票的持股變化</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">📊 總覽</a></li>
+                <li><a href="table_full.html">📋 完整表格</a></li>
+                <li><a href="stock_changes.html">🔄 成分股變化</a></li>
+                <li><a href="table_dropdown.html" class="active">🎯 個股查詢</a></li>
+                <li><a href="charts_separate.html">📈 分開圖表</a></li>
+                <li><a href="charts_dual_axis.html">📊 雙軸圖表</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="controls-section">
+            <h2>🔍 股票選擇</h2>
+            <div class="controls">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="stockSelect">🏢 選擇股票:</label>
+                        <select id="stockSelect">
+                            <option value="">載入中...</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="stockSearch">🔍 搜尋股票:</label>
+                        <input type="text" id="stockSearch" placeholder="輸入股票代號或名稱...">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stock-info-section" id="stockInfoSection" style="display: none;">
+            <h2>📈 股票資訊</h2>
+            <div class="stock-summary" id="stockSummary">
+                <!-- 股票摘要將在這裡顯示 -->
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="table-header">
+                <h2>📊 持股變化記錄</h2>
+                <div class="table-info">
+                    <span id="recordCount">請選擇股票查看資料</span>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table" id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>📅 日期</th>
+                            <th>📊 股數</th>
+                            <th>⚖️ 權重(%)</th>
+                            <th>📈 權重變化</th>
+                            <th>📊 股數變化</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody">
+                        <tr>
+                            <td colspan="5" class="loading">👆 請選擇股票查看資料</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ETF 持股變化分析器 | 資料來源: 野村基金 API</p>
+            <p>最後更新: <span id="last-update"></span></p>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+    <script src="assets/dropdown.js"></script>
+</body>
+</html>
