@@ -28,12 +28,12 @@
 
 ```
 etf-holdings-analyzer/
-├── data/                      # 資料儲存 (按月分檔CSV)
-│   ├── holdings_2025-05.csv
-│   ├── holdings_2025-06.csv
-│   ├── holdings_2025-07.csv
-│   └── holdings_2025-08.csv
-├── docs/                      # 網頁介面
+├── docs/                      # 網頁介面 (GitHub Pages)
+│   ├── data/                 # 資料儲存 (按月分檔CSV)
+│   │   ├── holdings_2025-05.csv
+│   │   ├── holdings_2025-06.csv
+│   │   ├── holdings_2025-07.csv
+│   │   └── holdings_2025-08.csv
 │   ├── assets/               # 靜態資源
 │   │   ├── style.css
 │   │   ├── script.js
@@ -47,6 +47,11 @@ etf-holdings-analyzer/
 │   ├── stock_changes.html    # 成分股變化分析
 │   ├── charts_separate.html  # 分開圖表
 │   └── charts_dual_axis.html # 雙軸圖表
+├── data/                      # 本地開發資料備份
+│   ├── holdings_2025-05.csv
+│   ├── holdings_2025-06.csv
+│   ├── holdings_2025-07.csv
+│   └── holdings_2025-08.csv
 ├── data_collector.py          # 資料收集腳本 ✅
 ├── test_collector.py          # 測試腳本
 ├── count_data.py             # 資料統計腳本

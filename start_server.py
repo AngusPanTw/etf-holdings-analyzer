@@ -24,7 +24,7 @@ def main():
         return False
     
     # 檢查資料是否存在
-    data_dir = Path("data")
+    data_dir = Path("docs/data")
     csv_files = list(data_dir.glob("holdings_*.csv")) if data_dir.exists() else []
     
     if not csv_files:

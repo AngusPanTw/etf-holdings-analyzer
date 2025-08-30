@@ -69,8 +69,9 @@ async function detectAvailableMonths() {
             const monthStr = `${year}-${month.toString().padStart(2, '0')}`;
             
             try {
-                // 使用相對於伺服器根目錄的絕對路徑
-                const response = await fetch(`/data/holdings_${monthStr}.csv`, {
+                // 使用動態路徑檢測
+                const dataPath = window.location.hostname === 'anguspantw.github.io' ? 'data/' : '/docs/data/';
+                const response = await fetch(`${dataPath}holdings_${monthStr}.csv`, {
                     method: 'HEAD' // 只檢查檔案是否存在，不下載內容
                 });
                 
@@ -108,8 +109,9 @@ async function detectAvailableMonthsForSubPages() {
             const monthStr = `${year}-${month.toString().padStart(2, '0')}`;
             
             try {
-                // 所有頁面都使用相對於伺服器根目錄的絕對路徑
-                const response = await fetch(`/data/holdings_${monthStr}.csv`, {
+                // 使用動態路徑檢測
+                const dataPath = window.location.hostname === 'anguspantw.github.io' ? 'data/' : '/docs/data/';
+                const response = await fetch(`${dataPath}holdings_${monthStr}.csv`, {
                     method: 'HEAD' // 只檢查檔案是否存在，不下載內容
                 });
                 
@@ -221,9 +223,10 @@ async function loadRecentDataPreview() {
         const latestMonth = availableMonths[availableMonths.length - 1];
         console.log('📊 載入最新月份資料:', latestMonth);
         
-        // 使用相對於伺服器根目錄的絕對路徑
-        const latestData = await loadCSVData(`/data/holdings_${latestMonth}.csv`);
-        
+        // 使用動態路徑
+        const dataPath = window.location.hostname === 'anguspantw.github.io' ? 'data/' : '/docs/data/';
+        const latestData = await loadCSVData(`${dataPath}holdings_${latestMonth}.csv`);
+
         if (latestData && latestData.length > 0) {
             // 取得最新日期的資料
             const latestDate = latestData[0]['日期'];
@@ -408,10 +411,10 @@ async function loadAllDataByMonth() {
         
         for (const month of availableMonths) {
             try {
-                // 所有頁面都使用相對於伺服器根目錄的絕對路徑
-                const pathPrefix = '/';
+                // 使用動態路徑
+                const dataPath = window.location.hostname === 'anguspantw.github.io' ? 'data/' : '/docs/data/';
                 
-                const data = await loadCSVData(`${pathPrefix}data/holdings_${month}.csv`);
+                const data = await loadCSVData(`${dataPath}holdings_${month}.csv`);
                 if (data && data.length > 0) {
                     allData[month] = data;
                     console.log(`✅ 載入 ${month}:`, data.length, '筆記錄');

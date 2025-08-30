@@ -14,7 +14,7 @@ def count_monthly_data():
     print("=== 各月份資料統計 ===")
     
     for month in months:
-        file_path = f"data/holdings_{month}.csv"
+        file_path = f"docs/data/holdings_{month}.csv"
         if os.path.exists(file_path):
             df = pd.read_csv(file_path)
             record_count = len(df)
