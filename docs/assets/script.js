@@ -89,7 +89,7 @@ async function detectAvailableMonths() {
 }
 
 /**
- * 為其他頁面檢測可用的月份檔案（使用相對路徑）
+ * 為其他頁面檢測可用的月份檔案（使用絕對路徑）
  */
 async function detectAvailableMonthsForSubPages() {
     const availableMonths = [];
@@ -108,8 +108,8 @@ async function detectAvailableMonthsForSubPages() {
             const monthStr = `${year}-${month.toString().padStart(2, '0')}`;
             
             try {
-                // 子頁面使用 ../data/ 路徑
-                const response = await fetch(`../data/holdings_${monthStr}.csv`, {
+                // 所有頁面都使用相對於伺服器根目錄的絕對路徑
+                const response = await fetch(`/data/holdings_${monthStr}.csv`, {
                     method: 'HEAD' // 只檢查檔案是否存在，不下載內容
                 });
                 
@@ -131,37 +131,8 @@ async function detectAvailableMonthsForSubPages() {
  * 載入主頁所需的所有資料
  */
 async function loadAllDataForHome() {
-    try {
-        // 動態檢測可用的月份檔案
-        const availableMonths = await detectAvailableMonths();
-        const allData = [];
-        
-        if (availableMonths.length === 0) {
-            console.warn('❌ 沒有找到任何資料檔案');
-            return allData;
-        }
-        
-        console.log('📅 檢測到可用月份:', availableMonths);
-        
-        for (const month of availableMonths) {
-            try {
-                // 主頁使用相對於伺服器根目錄的絕對路徑
-                const data = await loadCSVData(`/data/holdings_${month}.csv`);
-                if (data && data.length > 0) {
-                    allData.push(...data);
-                    console.log(`✅ 載入 ${month}:`, data.length, '筆記錄');
-                }
-            } catch (error) {
-                console.error(`❌ 載入 ${month} 資料失敗:`, error);
-            }
-        }
-        
-        console.log('📊 總共載入:', allData.length, '筆記錄');
-        return allData;
-    } catch (error) {
-        console.error('❌ 動態載入資料失敗:', error);
-        return [];
-    }
+    // 主頁需要按月份分組的資料，直接使用陣列版本即可
+    return await loadAllDataAsArray();
 }
 
 /**
@@ -395,18 +366,36 @@ function formatPercentage(num) {
 }
 
 /**
- * 載入所有月份的資料
+ * 載入所有月份的資料並合併為陣列（供表格使用）
  */
-async function loadAllData() {
+async function loadAllDataAsArray() {
     try {
-        // 檢測當前頁面是主頁還是子頁面
-        const currentPage = window.location.pathname;
-        const isMainPage = currentPage.includes('index.html') || currentPage.endsWith('/');
+        // 載入所有資料（物件格式）
+        const allDataByMonth = await loadAllDataByMonth();
+        const allDataArray = [];
         
-        // 根據頁面選擇正確的檢測函式
-        const availableMonths = isMainPage ? 
-            await detectAvailableMonths() : 
-            await detectAvailableMonthsForSubPages();
+        // 將所有月份的資料合併成一個陣列
+        Object.values(allDataByMonth).forEach(monthData => {
+            if (Array.isArray(monthData)) {
+                allDataArray.push(...monthData);
+            }
+        });
+        
+        console.log('📊 合併後資料總數:', allDataArray.length);
+        return allDataArray;
+    } catch (error) {
+        console.error('❌ 載入陣列格式資料失敗:', error);
+        return [];
+    }
+}
+
+/**
+ * 載入所有月份的資料（按月份分組）
+ */
+async function loadAllDataByMonth() {
+    try {
+        // 所有頁面都使用統一的檢測函式
+        const availableMonths = await detectAvailableMonths();
             
         const allData = {};
         
@@ -419,8 +408,8 @@ async function loadAllData() {
         
         for (const month of availableMonths) {
             try {
-                // 根據頁面類型選擇正確的路徑
-                const pathPrefix = isMainPage ? '/' : '../';
+                // 所有頁面都使用相對於伺服器根目錄的絕對路徑
+                const pathPrefix = '/';
                 
                 const data = await loadCSVData(`${pathPrefix}data/holdings_${month}.csv`);
                 if (data && data.length > 0) {
@@ -438,6 +427,14 @@ async function loadAllData() {
         console.error('❌ 動態載入所有資料失敗:', error);
         return {};
     }
+}
+
+/**
+ * 載入所有月份的資料
+ */
+async function loadAllData() {
+    // 回傳按月份分組的物件格式，保持原本行為
+    return await loadAllDataByMonth();
 }
 
 /**
@@ -550,6 +547,8 @@ window.ETFAnalyzer = {
     formatNumber,
     formatPercentage,
     loadAllData,
+    loadAllDataAsArray,
+    loadAllDataByMonth,
     getAllStocks,
     filterStockData,
     getDateRange,

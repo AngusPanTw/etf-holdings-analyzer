@@ -18,7 +18,7 @@ async function initializeFullTable() {
     
     try {
         // 載入所有資料
-        allTableData = await window.ETFAnalyzer.loadAllData();
+        allTableData = await window.ETFAnalyzer.loadAllDataAsArray();
         filteredData = [...allTableData];
         
         // 初始化控制項

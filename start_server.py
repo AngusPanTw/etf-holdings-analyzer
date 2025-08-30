@@ -63,15 +63,15 @@ def main():
         
         with socketserver.TCPServer(("", PORT), Handler) as httpd:
             print(f"🌐 伺服器啟動成功: http://localhost:{PORT}")
-            print(f"🏠 主頁面: http://localhost:{PORT}/web/index.html")
-            print(f"📊 完整表格: http://localhost:{PORT}/web/table_full.html")
-            print(f"🔍 個股查詢: http://localhost:{PORT}/web/table_dropdown.html")
+            print(f"🏠 主頁面: http://localhost:{PORT}/docs/index.html")
+            print(f"📊 完整表格: http://localhost:{PORT}/docs/table_full.html")
+            print(f"🔍 個股查詢: http://localhost:{PORT}/docs/table_dropdown.html")
             print("\n按 Ctrl+C 停止伺服器")
             
             # 自動開啟瀏覽器
             time.sleep(1)
             try:
-                webbrowser.open(f"http://localhost:{PORT}/web/index.html")
+                webbrowser.open(f"http://localhost:{PORT}/docs/index.html")
                 print("🌍 已自動開啟瀏覽器")
             except:
                 print("⚠️ 無法自動開啟瀏覽器，請手動訪問上述網址")

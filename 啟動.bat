@@ -1,21 +1,21 @@
 @echo off
 echo =============================================
-echo  ETF æŒè‚¡åˆ†æå™¨ - å¿«é€Ÿå•Ÿå‹•
+echo  ETF «ùªÑ¤ÀªR¾¹ - §Ö³t±Ò°Ê
 echo =============================================
 echo.
 
-echo ğŸ”„ æª¢æŸ¥ Python ç’°å¢ƒ...
+echo  ÀË¬d Python Àô¹Ò...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo âŒ æœªæ‰¾åˆ° Pythonï¼Œè«‹å…ˆå®‰è£ Python
+    echo  ¥¼§ä¨ì Python¡A½Ğ¥ı¦w¸Ë Python
     pause
     exit /b 1
 )
 
-echo âœ… Python ç’°å¢ƒæ­£å¸¸
+echo  Python Àô¹Ò¥¿±`
 
 echo.
-echo ğŸ“¡ å•Ÿå‹•ä¼ºæœå™¨...
+echo  ±Ò°Ê¦øªA¾¹...
 python start_server.py
 
 pause
