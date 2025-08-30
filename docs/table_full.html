@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整表格檢視 - ETF 持股變化分析器</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/tables.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📋 完整表格檢視</h1>
+            <p class="subtitle">查看所有持股的完整資料</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">📊 總覽</a></li>
+                <li><a href="table_full.html" class="active">📋 完整表格</a></li>
+                <li><a href="stock_changes.html">🔄 成分股變化</a></li>
+                <li><a href="table_dropdown.html">🎯 個股查詢</a></li>
+                <li><a href="charts_separate.html">📈 分開圖表</a></li>
+                <li><a href="charts_dual_axis.html">📊 雙軸圖表</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="controls-section">
+            <h2>🔧 篩選控制</h2>
+            <div class="controls">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="dateFilter">📅 選擇日期:</label>
+                        <select id="dateFilter">
+                            <option value="">載入中...</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="stockFilter">🏢 股票代號:</label>
+                        <input type="text" id="stockFilter" placeholder="輸入股票代號或名稱搜尋...">
+                    </div>
+                    <div class="control-group">
+                        <label for="weightFilter">⚖️ 最低權重:</label>
+                        <input type="range" id="weightFilter" min="0" max="10" step="0.1" value="0">
+                        <span class="threshold-value" id="weightValue">0.0%</span>
+                    </div>
+                </div>
+                <div class="control-actions">
+                    <button id="resetFilters" class="btn btn-secondary">🔄 重設篩選</button>
+                    <button id="exportData" class="btn btn-primary">📥 匯出資料</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="table-header">
+                <h2>📊 持股資料表</h2>
+                <div class="table-info">
+                    <span id="recordCount">總共 0 筆記錄</span>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table" id="holdingsTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="日期" class="sortable">📅 日期 <span class="sort-arrow"></span></th>
+                            <th data-sort="股票代號" class="sortable">🏢 股票代號 <span class="sort-arrow"></span></th>
+                            <th data-sort="股票名稱" class="sortable">📝 股票名稱 <span class="sort-arrow"></span></th>
+                            <th data-sort="股數" class="sortable">📊 股數 <span class="sort-arrow"></span></th>
+                            <th data-sort="權重" class="sortable">⚖️ 權重(%) <span class="sort-arrow"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="5" class="loading">⏳ 載入資料中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <!-- 分頁控制項將在這裡動態產生 -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ETF 持股變化分析器 | 資料來源: 野村基金 API</p>
+            <p>最後更新: <span id="last-update"></span></p>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+    <script src="assets/tables.js"></script>
+</body>
+</html>

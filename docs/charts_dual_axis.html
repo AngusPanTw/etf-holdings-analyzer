@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙軸圖表 - ETF 持股變化分析器</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📊 雙軸圖表</h1>
+            <p class="subtitle">權重和股數同時顯示</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">📊 總覽</a></li>
+                <li><a href="table_full.html">📋 完整表格</a></li>
+                <li><a href="table_dropdown.html">🎯 個股查詢</a></li>
+                <li><a href="charts_separate.html">📈 分開圖表</a></li>
+                <li><a href="charts_dual_axis.html" class="active">📊 雙軸圖表</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="development-notice">
+            <h2>🚧 功能開發中</h2>
+            <div class="notice-card">
+                <h3>📊 雙軸圖表功能</h3>
+                <p>此功能正在開發中，將包含以下特色：</p>
+                <ul>
+                    <li>📊 雙Y軸圖表（權重 + 股數）</li>
+                    <li>🎯 智慧型異常偵測</li>
+                    <li>🔧 可調整的閾值控制</li>
+                    <li>📈 趨勢分析和預測</li>
+                    <li>📥 圖表匯出功能</li>
+                </ul>
+                <p class="coming-soon">敬請期待！將在第四階段實作完成。</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 ETF 持股變化分析器 | 資料來源: 野村基金 API</p>
+            <p>最後更新: <span id="last-update"></span></p>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>
